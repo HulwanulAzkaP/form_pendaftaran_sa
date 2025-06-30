@@ -57,7 +57,7 @@ pendaftaran/
 └── README.md
 ```
 
-## Teknologi
+## Library
 - Python 3
 - Flask
 - Bootstrap 5 (CDN)
