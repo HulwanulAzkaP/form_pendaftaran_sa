@@ -1,4 +1,4 @@
-# Pendaftaran ACTVENTURE X
+# Contoh Halaman Pendaftaran Event ACTVENTURE X
 
 Aplikasi web pendaftaran tim untuk event ACTVENTURE X berbasis Flask.
 
