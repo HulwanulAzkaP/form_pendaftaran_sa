@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - Data Pendaftaran</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container py-5">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2>Data Pendaftaran</h2>
+            <div>
+                <form method="post" action="{{ url_for('admin_reset') }}" style="display:inline;" onsubmit="return confirm('Yakin ingin menghapus semua data pendaftar?');">
+                    <button type="submit" class="btn btn-danger">Reset Semua</button>
+                </form>
+                <a href="{{ url_for('logout') }}" class="btn btn-secondary ms-2">Logout</a>
+                <a href="{{ url_for('export_csv') }}" class="btn btn-success ms-2">Export CSV</a>
+            </div>
+        </div>
+        <form class="row g-3 mb-4" method="get">
+            <div class="col-md-3">
+                <select class="form-select" name="filter_category" onchange="this.form.submit()">
+                    <option value="">Semua Kategori</option>
+                    <option value="Mapala" {% if filter_category=='Mapala' %}selected{% endif %}>Mapala</option>
+                    <option value="Umum" {% if filter_category=='Umum' %}selected{% endif %}>Umum</option>
+                </select>
+            </div>
+            <div class="col-md-4">
+                <input type="text" class="form-control" name="search_team" placeholder="Cari Nama Tim" value="{{ search_team|default('') }}">
+            </div>
+            <div class="col-md-2">
+                <button type="submit" class="btn btn-primary w-100">Filter</button>
+            </div>
+        </form>
+        {% if registrations %}
+        <div class="table-responsive">
+            <table class="table table-bordered table-striped">
+                <thead class="table-dark">
+                    <tr>
+                        <th>#</th>
+                        <th>Kategori</th>
+                        <th>Nama Tim</th>
+                        <th>Email</th>
+                        <th>Instagram</th>
+                        <th>Detail</th>
+                        <th>Export PDF</th>
+                        <th>Delete</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for reg in registrations %}
+                    <tr>
+                        <td>{{ loop.index }}</td>
+                        <td>{{ reg.category }}</td>
+                        <td>{{ reg.team_name }}</td>
+                        <td>{{ reg.team_email }}</td>
+                        <td>{{ reg.instagram }}</td>
+                        <td>
+                            <button type="button" class="btn btn-info btn-sm" data-bs-toggle="modal" data-bs-target="#detailModal{{ loop.index }}">Detail</button>
+                        </td>
+                        <td>
+                            <a href="{{ url_for('export_pdf', team_id=loop.index) }}" class="btn btn-primary btn-sm" target="_blank">Export PDF</a>
+                        </td>
+                        <td>
+                            <form method="post" action="{{ url_for('admin_delete_team', team_id=loop.index) }}" style="display:inline;" onsubmit="return confirm('Yakin ingin menghapus tim ini?');">
+                                <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                            </form>
+                        </td>
+                    </tr>
+                    <!-- Modal Detail Tim -->
+                    <div class="modal fade" id="detailModal{{ loop.index }}" tabindex="-1" aria-labelledby="detailModalLabel{{ loop.index }}" aria-hidden="true">
+                      <div class="modal-dialog modal-lg">
+                        <div class="modal-content bg-dark text-white">
+                          <div class="modal-header">
+                            <h5 class="modal-title" id="detailModalLabel{{ loop.index }}">Detail Tim: {{ reg.team_name }}</h5>
+                            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                          </div>
+                          <div class="modal-body">
+                            <p><b>Kategori:</b> {{ reg.category }}<br>
+                               <b>Email:</b> {{ reg.team_email }}<br>
+                               <b>Instagram:</b> {{ reg.instagram }}</p>
+                            <div class="row">
+                              {% for m in reg.members %}
+                              <div class="col-md-6 mb-3">
+                                <div class="card bg-secondary text-white">
+                                  <div class="card-body">
+                                    <h5 class="card-title">{{ m.name }}</h5>
+                                    <ul class="list-group list-group-flush mb-2">
+                                      <li class="list-group-item bg-secondary text-white">Gender: {{ m.gender }}</li>
+                                      <li class="list-group-item bg-secondary text-white">Instagram: {{ m.instagram }}</li>
+                                      <li class="list-group-item bg-secondary text-white">WhatsApp: {{ m.whatsapp }}</li>
+                                    </ul>
+                                    {% if m.ktm %}
+                                    <div class="mb-2">
+                                      <b>KTM:</b><br>
+                                      {% if m.ktm.endswith('.jpg') or m.ktm.endswith('.jpeg') or m.ktm.endswith('.png') %}
+                                        <img src="{{ url_for('static', filename='../uploads/' + m.ktm) }}" alt="KTM" class="img-fluid rounded mb-2" style="max-height:180px;">
+                                      {% else %}
+                                        <a href="{{ url_for('static', filename='../uploads/' + m.ktm) }}" target="_blank" class="btn btn-light btn-sm">Lihat KTM (PDF)</a>
+                                      {% endif %}
+                                    </div>
+                                    {% endif %}
+                                    {% if m.kta %}
+                                    <div class="mb-2">
+                                      <b>KTA:</b><br>
+                                      {% if m.kta.endswith('.jpg') or m.kta.endswith('.jpeg') or m.kta.endswith('.png') %}
+                                        <img src="{{ url_for('static', filename='../uploads/' + m.kta) }}" alt="KTA" class="img-fluid rounded mb-2" style="max-height:180px;">
+                                      {% else %}
+                                        <a href="{{ url_for('static', filename='../uploads/' + m.kta) }}" target="_blank" class="btn btn-light btn-sm">Lihat KTA (PDF)</a>
+                                      {% endif %}
+                                    </div>
+                                    {% endif %}
+                                  </div>
+                                </div>
+                              </div>
+                              {% endfor %}
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <div class="alert alert-info">Belum ada data pendaftaran.</div>
+        {% endif %}
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html> 

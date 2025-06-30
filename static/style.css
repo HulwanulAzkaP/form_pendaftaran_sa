@@ -1,0 +1,83 @@
+body {
+    background: #f8f9fa;
+    position: relative;
+}
+body::before {
+    content: '';
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0,0,0,0.75);
+    z-index: 0;
+}
+.container, header, form, .card, .table, .alert, .row, .col-md-6, .col-12 {
+    position: relative;
+    z-index: 1;
+}
+.card {
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    border-radius: 12px;
+    background: rgba(20,20,20,0.92);
+    color: #fff;
+}
+.logo {
+    max-width: 120px;
+}
+header.bg-dark {
+    background: #111 !important;
+}
+header .logo {
+    max-width: 80px;
+    height: auto;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+header h1 {
+    font-size: 1.7rem;
+    font-weight: 700;
+    color: #fff;
+}
+label, .form-label, .form-check-label, h4, h5, h2, h3, h1, .lead, .alert, .btn, .table, .table th, .table td {
+    color: #fff !important;
+    text-shadow: 0 1px 4px #000, 0 0 2px #000;
+}
+input, select, textarea {
+    background: rgba(0,0,0,0.2) !important;
+    color: #fff !important;
+    border: 1px solid #fff !important;
+}
+input::placeholder, textarea::placeholder {
+    color: #fff !important;
+    opacity: 1;
+}
+input[type="file"] {
+    color-scheme: dark;
+    background: rgba(0,0,0,0.3) !important;
+    color: #fff !important;
+    border: 1px solid #fff !important;
+}
+.table {
+    background: rgba(20,20,20,0.92);
+}
+.alert {
+    background: rgba(20,20,20,0.92);
+    border: none;
+}
+.btn-primary {
+    background: #007bff !important;
+    border: none !important;
+    color: #fff !important;
+}
+.btn-success, .btn-danger, .btn-dark {
+    background: #222 !important;
+    border: none !important;
+    color: #fff !important;
+}
+@media (max-width: 768px) {
+    header h1 {
+        font-size: 1.1rem;
+    }
+    .card {
+        padding: 0.5rem;
+    }
+} 
